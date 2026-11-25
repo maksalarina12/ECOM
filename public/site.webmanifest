@@ -2,16 +2,26 @@
   "name": "ECOM — Commerce, Reimagined",
   "short_name": "ECOM",
   "description": "Interactive 3D commerce prototype for Indonesian creative businesses.",
+  "id": "/",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#f5f2eb",
   "theme_color": "#22231f",
+  "categories": ["shopping", "design", "lifestyle"],
   "icons": [
     {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }

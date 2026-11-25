@@ -47,6 +47,14 @@ npm run check     # type-check + test + production build
 - Ganti warna tekstil, ganti ukuran (Single / Double / Queen / King), product passport.
 - Interaksi khusus: klik lampu untuk menyalakan, klik pintu lemari untuk membuka.
 - Kamera responsif: framing otomatis menyesuaikan lebar layar.
+- Mobile GPU path: adaptive DPR, reduced shadow resolution, bounded contact-shadow frames, touch-optimized orbit controls.
+
+**PWA**
+
+- Installable di Android/iOS melalui web app manifest dan ikon maskable.
+- Service worker menyimpan app shell, thumbnail, logo, serta model GLB untuk kunjungan berikutnya.
+- Navigasi memakai network-first dengan fallback offline; aset statis memakai cache-first + background refresh.
+- Service worker mengambil versi baru otomatis setelah deployment.
 
 **Merchant dashboard (`/admin`)**
 

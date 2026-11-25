@@ -16,6 +16,8 @@
 }
 html{scroll-behavior:smooth}
 body{background:var(--paper);-webkit-font-smoothing:antialiased}
+html,body{overscroll-behavior-y:none}
+.canvas-wrap canvas{touch-action:none;user-select:none;-webkit-user-select:none}
 body::before{
   content:"";position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.035;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -383,6 +385,7 @@ body::before{
   .studio-side-top h1{font-size:46px}
 }
 @media(max-width:800px){
+  .header{padding-left:max(5%,env(safe-area-inset-left));padding-right:max(5%,env(safe-area-inset-right))}
   .hero-facts{gap:24px;margin-top:38px}
   .hero-facts b{font-size:23px}
   .values{grid-template-columns:1fr}
@@ -399,6 +402,8 @@ body::before{
   .admin-foot{flex-direction:column;align-items:flex-start}
   .detail-showcase .product-art{width:78%}
   .studio-main{height:56svh}
+  .studio-main{contain:layout paint;transform:translateZ(0)}
+  .studio-side{padding-bottom:env(safe-area-inset-bottom)}
   .scene-callout{right:10px;width:164px;padding:7px 8px}
   .scene-callout.callout-0{top:14%}.scene-callout.callout-1{top:24%}.scene-callout.callout-2{top:34%}.scene-callout.callout-3{top:44%}.scene-callout.callout-4{top:54%}
   .callout-copy small{display:none}
@@ -437,6 +442,7 @@ body::before{
   .about-note h2{font-size:27px}
   .pipeline>div{grid-template-columns:76px 1fr 20px}
   .order-summary{padding:28px 22px}
+  .studio-main{height:58svh;min-height:390px}
   .scene-callout{width:138px}
   .callout-copy{grid-template-columns:20px 1fr}
   .callout-copy strong{font-size:8px}
