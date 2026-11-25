@@ -326,6 +326,11 @@ body::before{
 .auth-panel label{display:flex;flex-direction:column;gap:9px;margin-bottom:17px;font-size:11px;font-weight:600}
 .auth-panel input{border:1px solid #d1c7b9;background:#faf8f3;padding:15px;color:#22231f}
 .auth-error{font-size:11px;color:#9a443a;margin:0 0 16px}
+.demo-access{max-width:430px;margin-top:28px;border-top:1px solid #d8d0c4;padding-top:16px}
+.demo-access>span{font:9px 'IBM Plex Mono',monospace;letter-spacing:1.2px;color:#917b61}
+.demo-access>p{font-size:10px;line-height:1.5;color:#786f62;margin:8px 0 12px}
+.demo-access>div{display:grid;grid-template-columns:78px 1fr 1fr;gap:8px;border-top:1px solid #e1dad0;padding:8px 0;font-size:9px;align-items:center}
+.demo-access b{font-size:9px}.demo-access code{font:8px 'IBM Plex Mono',monospace;color:#5d554b;word-break:break-all}
 .auth-visual{background:linear-gradient(145deg,#30342f,#62675d 55%,#9b7356);color:#f5efe5;display:flex;align-items:flex-end;padding:8%;position:relative;overflow:hidden}
 .auth-visual::before{content:"";position:absolute;width:70%;aspect-ratio:1;border:1px solid #f4dfc044;border-radius:50%;right:-12%;top:8%;box-shadow:0 0 0 50px #f4dfc012,0 0 0 110px #f4dfc00a}
 .auth-visual>div{position:relative;max-width:520px}
