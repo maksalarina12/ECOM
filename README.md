@@ -110,7 +110,17 @@ The API validates the signed session and role for every protected request. A cus
 
 > Temporary jury credentials are intentionally displayed only on the live `/login` page. They are not committed to this repository or README. Rotate them after evaluation.
 
----
+### Jury demo access — temporary
+
+> **Temporary public credentials for evaluation only.** These accounts use intentionally limited demo data. Rotate or disable every account after the evaluation; removing this table later does **not** remove credentials from Git history.
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Customer | `customer@ecom.local` | `xhUUKNEVmPQGeZNm` |
+| Merchant | `merchant@ecom.local` | `Nz3Rd9V9BlM7Jevg` |
+| Admin | `admin@ecom.local` | `q5Tk_HYnfYnJDYMN` |
+
+--- 
 
 ## Architecture
 
