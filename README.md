@@ -1,163 +1,244 @@
 <div align="center">
+  <a href="https://ee-ecom.vercel.app">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="public/logos/ECOM-White.png">
+      <img src="public/logos/ECOM-Black.png" alt="ECOM" width="220">
+    </picture>
+  </a>
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="public/logos/ECOM-White.png">
-  <img src="public/logos/ECOM-Black.png" alt="Logo ECOM" width="160">
-</picture>
+  <br><br>
 
+  <strong>Commerce, reimagined through product understanding.</strong>
+  <br>
+  An editorial commerce prototype that turns product browsing into an interactive 3D experience.
+
+  <br><br>
+
+  <a href="https://ee-ecom.vercel.app">Live experience</a>
+  &nbsp;·&nbsp;
+  <a href="https://ee-ecom.vercel.app/studio/rest">3D studio</a>
+  &nbsp;·&nbsp;
+  <a href="https://ee-ecom.vercel.app/login">Role demo</a>
+  &nbsp;·&nbsp;
+  <a href="https://ee-ecom.vercel.app/admin/demo">Dashboard demo</a>
+
+  <br><br>
+
+  [![Verify production build](https://github.com/maksalarina12/ECOM/actions/workflows/deploy.yml/badge.svg)](https://github.com/maksalarina12/ECOM/actions/workflows/deploy.yml)
+  [![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
+  [![React](https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white)](https://react.dev)
+  [![Three.js](https://img.shields.io/badge/Three.js-3D-black?logo=three.js)](https://threejs.org)
 </div>
 
-# ECOM · Katalog UMKM dan Studio 3D
+<br>
 
-ECOM adalah prototipe katalog untuk UMKM kreatif Indonesia. Pengunjung dapat menjelajahi koleksi furnitur, memeriksa material dan dimensi produk di studio 3D, lalu mencoba alur belanja.
+![ECOM storefront — editorial homepage with interactive 3D bed](docs/screenshots/home.webp)
 
-| Area | Akses |
+## The idea
+
+ECOM is a showcase for a more transparent way to shop for designed objects. Instead of relying on a flat catalog image, customers can inspect construction, dimensions, materials, and interaction states before adding an item to their bag.
+
+Built for the **Creative Hub for App Talent (CHAT) 2026 · Banda Aceh** hands-on vibe-coding showcase.
+
+> **Live:** [ee-ecom.vercel.app](https://ee-ecom.vercel.app)
+
+---
+
+## Product studio
+
+The core experience is an interactive 3D product studio. It is designed to communicate how an object is made, not only how it looks.
+
+![ECOM REST product studio — 3D material and construction inspection](docs/screenshots/studio.webp)
+
+- Real-time, touch-enabled 3D product inspection
+- Inspect, exploded, X-ray, dimension, and materials modes
+- Five-layer hybrid mattress construction with interactive annotations
+- Product variants, textile color choices, and live component selection
+- Procedural 3D models for the complete furniture collection
+- Adaptive rendering path for mobile GPUs: bounded DPR, reduced geometry, and lightweight shadows
+
+---
+
+## Built for every screen
+
+ECOM is installable as a PWA and designed for touch-first browsing, including smooth 3D interaction on mobile devices.
+
+<table>
+  <tr>
+    <td width="42%" valign="top">
+      <img src="docs/screenshots/mobile-login.webp" alt="ECOM mobile role-based login" width="100%">
+    </td>
+    <td valign="top">
+      <h3>Mobile-ready by default</h3>
+      <ul>
+        <li>Installable web app for Android and iOS</li>
+        <li>Offline app shell and cached 3D model after first load</li>
+        <li>Safe-area-aware layout for standalone mode</li>
+        <li>Touch-optimized orbit controls and responsive camera framing</li>
+        <li>Role-based account access that works equally well on phone or desktop</li>
+      </ul>
+      <p><a href="https://ee-ecom.vercel.app/login">Open the role demo →</a></p>
+    </td>
+  </tr>
+</table>
+
+---
+
+## What is included
+
+| Area | Experience |
 | --- | --- |
-| Storefront | [https://ee-ecom.vercel.app](https://ee-ecom.vercel.app) |
-| Dashboard admin demo | [/admin/demo](https://ee-ecom.vercel.app/admin/demo) · tanpa login |
-| Workspace dengan akun | [/login](https://ee-ecom.vercel.app/login) · memerlukan backend yang sudah dikonfigurasi |
+| **Storefront** | Editorial landing page, product collection, filters, search, sorting, product details, bag, and checkout flow. |
+| **3D studio** | Eleven product models, cinematic lighting, camera controls, material construction, and responsive scene quality. |
+| **Commerce** | Variant-aware pricing, cart persistence, checkout validation, order creation, and account order history. |
+| **Role access** | Customer, merchant, and admin workspaces protected server-side—not only hidden in the interface. |
+| **Merchant workspace** | Product management, order pipeline, stock monitoring, and order status changes. |
+| **Admin workspace** | User list and role management, with protected API access. |
+| **PWA** | Web manifest, service worker, icons, cached shell/assets, and offline navigation fallback. |
 
-## Showcase CHAT 2026 · Banda Aceh
+---
 
-Proyek ini dikembangkan menggunakan **OpenCode** sebagai praktik *Hands-On Vibe Coding* pada **Creative Hub for App Talent (CHAT) 2026**, sesi Banda Aceh, 25 November 2026 di Aula Museum Aceh. Program CHAT diselenggarakan oleh **Direktorat Aplikasi, Kementerian Ekonomi Kreatif/Badan Ekonomi Kreatif Republik Indonesia**. [Pengumuman resmi program](https://ekraf.go.id/berita/kementerian-ekraf-cetak-talenta-aplikasi-daerah-lewat-peluncuran-program)
+## Role model
 
-## Dashboard demo
+| Role | Allowed actions |
+| --- | --- |
+| **Customer** | Browse, add items to bag, create orders, and view only their own order history. |
+| **Merchant** | Access the merchant workspace and manage orders/products. |
+| **Admin** | All merchant capabilities plus user and role management. |
 
-Buka `/admin/demo` untuk mencoba ringkasan bisnis, pengelolaan produk, status pesanan, dan perubahan peran pengguna. Dashboard menggunakan data contoh dan menyimpan perubahan selama halaman dashboard terbuka. Muat ulang halaman atau gunakan tombol reset untuk memulihkan data contoh.
+The API validates the signed session and role for every protected request. A customer request to the admin user endpoint is rejected with `403`.
 
-## Teknologi
+> Temporary jury credentials are intentionally displayed only on the live `/login` page. They are not committed to this repository or README. Rotate them after evaluation.
 
-React 19, TypeScript, Vite, Three.js, React Three Fiber, Drei, GSAP, Zustand, dan React Router. Backend opsional menggunakan Vercel Functions.
+---
 
-## Menjalankan
+## Architecture
 
-Butuh Node.js 20+.
+```text
+Browser / PWA
+  ├─ React + TypeScript + Vite
+  ├─ Three.js + React Three Fiber + Drei
+  ├─ Zustand (local interface state and bag)
+  └─ Vercel Functions (/api)
+       ├─ Signed HttpOnly session cookie
+       ├─ scrypt password verification
+       ├─ server-side role authorization
+       └─ private GitHub JSON store (demo persistence)
+```
+
+### Security decisions for the demo
+
+- Passwords are saved as **scrypt hashes**; never as plaintext in the database.
+- Sessions are signed and stored in **HttpOnly, Secure, SameSite=Strict** cookies.
+- Authorization runs in the Vercel function, not in client-side route visibility alone.
+- Database token and session secret live in **Vercel Environment Variables**—never `VITE_*` variables or Git.
+- The demo data repository is private.
+
+---
+
+## Tech stack
+
+- **Frontend:** React 19, TypeScript, Vite, React Router
+- **3D:** Three.js, React Three Fiber, Drei
+- **Interaction/state:** GSAP, Zustand
+- **Backend:** Vercel Functions, GitHub Contents API (private demo store)
+- **Quality:** Vitest, TypeScript checks, GitHub Actions
+
+---
+
+## Run locally
+
+**Requirement:** Node.js 20+.
 
 ```bash
 npm install
-npm run assets:fetch   # unduh model kasur CC0 (sekali saja, ±5 MB)
-npm run dev            # http://localhost:5173
+npm run dev
 ```
 
-`npm run dev` menjalankan storefront Vite saja. Untuk mencoba API/auth lokal, siapkan `.env.local` dari `.env.example` dan jalankan `npx vercel dev` (Vercel CLI); URL lokalnya ditampilkan oleh CLI.
+Open [http://localhost:5173](http://localhost:5173).
 
-Perintah lain:
+### Commands
 
 ```bash
-npm run build     # type-check + production build
-npm run preview   # preview hasil build
-npm test          # 8 unit test (catalog + cart/order logic)
-npm run check     # type-check + test + production build
+npm run typecheck  # TypeScript verification
+npm test           # Unit tests
+npm run build      # Production build
+npm run check      # Typecheck + tests + production build
+npm run preview    # Serve production build locally
 ```
 
-`npm run assets:fetch` bersifat opsional — tanpa model GLB, hero dan product page tetap berjalan memakai kasur prosedural bawaan.
+### Local API/auth
 
-## Yang bisa dicoba
-
-**Storefront**
-
-- Landing editorial dengan hero 3D real-time, marquee, value strip, dan kurasi produk.
-- Katalog dengan pencarian, filter kategori (Sleep / Living / Craft), sorting, dan empty state.
-- 11 produk contoh dengan ilustrasi line-art khusus per produk.
-- Halaman detail: pemilihan ukuran kasur, stok demo, add to bag, spec list.
-- Keranjang: ubah qty, hapus item, progress gratis pengiriman (demo), rekomendasi "Complete the room".
-- Checkout simulasi: validasi form, pilihan metode pembayaran (transfer / QRIS / COD), order ID.
-- Newsletter demo di footer (tidak mengirim email).
-
-**Product studio (`/studio/rest`)**
-
-- Lima mode inspeksi: Inspect, Exploded view, X-ray, Dimensions, Materials.
-- Exploded slider 0–100%, pemilihan komponen, detail tiap lapisan.
-- Diagram konstruksi proporsional + comfort profile (ilustratif).
-- Ganti warna tekstil, ganti ukuran (Single / Double / Queen / King), product passport.
-- Interaksi khusus: klik lampu untuk menyalakan, klik pintu lemari untuk membuka.
-- Kamera responsif: framing otomatis menyesuaikan lebar layar.
-- Mobile GPU path: adaptive DPR, reduced shadow resolution, bounded contact-shadow frames, touch-optimized orbit controls.
-
-**PWA**
-
-- Installable di Android/iOS melalui web app manifest dan ikon maskable.
-- Service worker menyimpan app shell, thumbnail, logo, serta model GLB untuk kunjungan berikutnya.
-- Navigasi memakai network-first dengan fallback offline; aset statis memakai cache-first + background refresh.
-- Service worker mengambil versi baru otomatis setelah deployment.
-
-**Merchant dashboard (`/admin`)**
-
-- Overview: metrik, pipeline pesanan, peringatan low-stock, pesanan terbaru.
-- CRUD produk (create / edit / delete) dengan pencarian.
-- Manajemen status pesanan; stok varian kasur berkurang saat pesanan di-*confirm*.
-- Reset seluruh data demo.
-
-## Struktur
-
-```
-src/data/catalog.ts    data produk, varian ukuran, harga, format IDR
-src/store/shop.ts      state commerce + persist localStorage
-src/scenes/Scene.tsx   showroom 3D, kasur 5 lapisan, pegas instanced, lampu, lemari
-src/App.tsx            storefront, studio, cart, checkout, about, dashboard
-src/styles.css         sistem visual editorial + komponen + responsive
-public/models/         GLB kasur (diunduh via npm run assets:fetch)
-public/favicon.svg     monogram ECOM
-tests/                 unit test katalog dan alur keranjang/pesanan
-```
-
-## Backend demo
-
-Autentikasi dan pesanan demo memakai API serverless Vercel (`/api/*`) dan file `db.json` di private GitHub repository. API mengakses GitHub dengan token server-side; password disimpan sebagai hash scrypt, session memakai cookie HttpOnly bertanda tangan, dan role aktif dibaca ulang dari database pada setiap endpoint terlindungi.
-
-Untuk menyiapkan database, buat private repository khusus, lalu jalankan seeding dari lingkungan lokal yang sudah login ke GitHub CLI:
+Copy `.env.example` to `.env.local`, fill in the server-side values, then run:
 
 ```bash
-DB_REPO=OWNER/PRIVATE_REPO npm run db:seed
+npx vercel dev
 ```
 
-Perintah ini membuat akun demo acak dan menulis kredensial ke `accounts.local.txt` (file lokal yang diabaikan Git). Simpan file tersebut dengan aman dan hapus setelah kredensial dicatat. Tambahkan environment variables berikut di Vercel untuk Production/Preview, lalu redeploy:
+Never expose `DB_GITHUB_TOKEN` or `SESSION_SECRET` to the browser. Variables prefixed with `VITE_` are public by design.
 
-- `DB_REPO_OWNER` dan `DB_REPO_NAME`: pemilik dan nama private repository.
-- `DB_GITHUB_TOKEN`: GitHub token dengan akses contents ke repository privat saja.
-- `SESSION_SECRET`: nilai acak rahasia minimal 32 karakter.
+---
 
-Variabel ini harus server-side; jangan gunakan prefix `VITE_`. `.env.example` hanya daftar nama, bukan file rahasia.
+## Project structure
 
-## Batasan (penting)
+```text
+src/
+  App.tsx               routes, storefront, checkout, dashboards
+  auth.tsx              client auth context and role guard
+  scenes/Scene.tsx      cinematic 3D scenes and mobile render path
+  store/shop.ts         cart and local UI state
+api/
+  auth/                 login, logout, current session
+  orders/               authenticated order read/write
+  admin/                administrator-only user operations
+server/
+  auth.js               session and password primitives
+  db.js                 private JSON-store adapter
+public/
+  models/               CC0 GLB asset
+  products/             rendered 3D catalog thumbnails
+  sw.js                 service worker
+```
 
-- **Semua produk, harga, stok, dan klaim bersifat ilustratif.** Tidak ada sertifikasi, garansi, atau provenans manufaktur yang terverifikasi.
-- Checkout **simulasi**: tidak ada pembayaran, pengiriman, pajak, atau email transaksional.
-- Katalog produk, akun, dan pesanan disimpan di file JSON private GitHub untuk demo; keranjang tetap di `localStorage`. Ini bukan database transaksional.
-- GitHub Contents API bukan penyimpanan transaksi: pembaruan beruntun, inventori serentak, dan skala produksi memerlukan database transaksional.
-- Model GLB adalah furnitur ilustratif (CC0, Innerscene), bukan spesifikasi pabrikan. Studio kasur memakai model konstruksi internal tersendiri; keduanya bukan satu model yang saling terverifikasi.
-- Produk non-kasur memakai ilustrasi vektor, bukan foto produk berlisensi.
-- Logo resmi ECOM-Black.png / ECOM-White.png belum tersedia; header memakai wordmark teks dengan fallback otomatis.
-- Belum ada upload gambar/GLB, payment gateway, atau transaksi inventori yang durable.
+---
 
-## Sebelum dipakai untuk penjualan nyata
+## Deployment
 
-1. Database transaksional dengan operasi order dan inventori atomik.
-2. Isolasi merchant per toko dan audit keamanan sebelum dipakai untuk data nyata.
-3. Storage tervalidasi untuk foto produk dan model 3D (kuota + signed URL).
-4. Verifikasi pemasok, sertifikasi, dan isi product passport.
-5. Foto produk berlisensi, logo resmi, serta QA browser/perangkat nyata.
-6. Audit performa (model 3D ±5 MB, code-splitting scene sudah dilakukan).
+The production project is hosted on Vercel at [ee-ecom.vercel.app](https://ee-ecom.vercel.app). Every push to `main` runs the verification workflow before release.
 
-## Deploy demo
+For a new Vercel project, configure the following **server-side** environment variables:
 
-Build ini siap untuk static showcase deployment:
+```env
+DB_REPO_OWNER=
+DB_REPO_NAME=
+DB_GITHUB_TOKEN=
+SESSION_SECRET=
+```
+
+Then deploy:
 
 ```bash
-npm run check
-npm run build
+vercel --prod
 ```
 
-- **Vercel:** import repositori ini; `api/` berisi serverless functions, sementara `vercel.json` menangani SPA rewrite dan security/cache headers. Set semua server-side secrets sebelum deploy.
-- **Netlify:** publish directory `dist`; `public/_redirects` sudah menangani client-side routes.
-- **Server sendiri:** serve folder `dist` dan fallback seluruh route yang tidak ditemukan ke `index.html`.
+---
 
-Gunakan HTTPS. Jangan masukkan credential produksi ke variabel `VITE_*`, karena seluruh nilai tersebut dapat dibaca dari browser.
+## Known demo boundaries
 
-## Aset 3D
+ECOM is a polished showcase, not a production payments platform.
 
-Model: **Low platform bed 160 × 200, oak** — Innerscene 3D Parts Library, lisensi CC0. Detail dan atribusi ada di [`ASSETS.md`](./ASSETS.md).
+- Product specifications, prices, inventory, and claims are illustrative.
+- No payment capture, courier integration, tax calculation, or transactional email is connected.
+- The private GitHub JSON store is suitable for a controlled demo, not concurrent production orders or inventory.
+- A real launch should use a transactional database, payment gateway, object storage, audit logging, and merchant-level data isolation.
 
-## Environment
+---
 
-Pengembangan terakhir diuji dengan Node.js 24, npm 11, Vite 6, dan Chromium headless (desktop 1440×900 + mobile 390×844).
+## Asset credit
+
+The low-platform bed model is from the **Innerscene 3D Parts Library**, licensed **CC0**. See [ASSETS.md](./ASSETS.md) for details.
+
+<div align="center">
+  <br>
+  <sub>Made for CHAT 2026 · Banda Aceh · Indonesia</sub>
+</div>
