@@ -1574,6 +1574,13 @@ function Login() {
   const location = useLocation();
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [demoAccounts, setDemoAccounts] = useState<Array<{ role: string; email: string; password: string }>>([]);
+  useEffect(() => {
+    fetch('/api/demo-access')
+      .then((response) => response.ok ? response.json() : { accounts: [] })
+      .then((data) => setDemoAccounts(data.accounts || []))
+      .catch(() => undefined);
+  }, []);
   useEffect(() => {
     if (user) navigate(user.role === 'customer' ? '/account' : '/admin', { replace: true });
   }, [user, navigate]);
@@ -1603,13 +1610,11 @@ function Login() {
           {error && <p className="auth-error" role="alert">{error}</p>}
           <button className="btn dark wide" disabled={submitting}>{submitting ? 'Signing in…' : 'Sign in'} <ArrowRight size={16} /></button>
         </form>
-        <div className="demo-access" aria-label="Demo credentials">
+        {demoAccounts.length > 0 && <div className="demo-access" aria-label="Demo credentials">
           <span>JURY DEMO ACCESS</span>
           <p>Gunakan akun sesuai role untuk menguji akses workspace.</p>
-          <div><b>Customer</b><code>customer@ecom.local</code><code>xhUUKNEVmPQGeZNm</code></div>
-          <div><b>Merchant</b><code>merchant@ecom.local</code><code>Nz3Rd9V9BlM7Jevg</code></div>
-          <div><b>Admin</b><code>admin@ecom.local</code><code>q5Tk_HYnfYnJDYMN</code></div>
-        </div>
+          {demoAccounts.map((account) => <div key={account.role}><b>{account.role}</b><code>{account.email}</code><code>{account.password}</code></div>)}
+        </div>}
       </section>
       <aside className="auth-visual"><div><span>ROLE-BASED ACCESS</span><h2>One account.<br/>The right workspace.</h2><p>Customer, merchant, dan administrator memiliki hak akses terpisah yang divalidasi server.</p></div></aside>
     </main>

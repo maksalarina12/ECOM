@@ -108,17 +108,7 @@ ECOM is installable as a PWA and designed for touch-first browsing, including sm
 
 The API validates the signed session and role for every protected request. A customer request to the admin user endpoint is rejected with `403`.
 
-> Temporary jury credentials are intentionally displayed only on the live `/login` page. They are not committed to this repository or README. Rotate them after evaluation.
-
-### Jury demo access — temporary
-
-> **Temporary public credentials for evaluation only.** These accounts use intentionally limited demo data. Rotate or disable every account after the evaluation; removing this table later does **not** remove credentials from Git history.
-
-| Role | Email | Password |
-| --- | --- | --- |
-| Customer | `customer@ecom.local` | `xhUUKNEVmPQGeZNm` |
-| Merchant | `merchant@ecom.local` | `Nz3Rd9V9BlM7Jevg` |
-| Admin | `admin@ecom.local` | `q5Tk_HYnfYnJDYMN` |
+Temporary jury credentials can be presented from the live `/login` page through server-side environment variables. They are not committed to this repository or README. Rotate or disable them after evaluation.
 
 --- 
 
