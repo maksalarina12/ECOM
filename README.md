@@ -4,6 +4,8 @@ Prototype commerce experience untuk UMKM kreatif Indonesia: katalog produk + **s
 
 Dibangun dengan React 19, TypeScript, Vite, Three.js / React Three Fiber / Drei, GSAP, Zustand, dan React Router.
 
+**Live demo:** https://ecom-banda-aceh.vercel.app
+
 ## Menjalankan
 
 Butuh Node.js 20+.
