@@ -13,9 +13,9 @@ ECOM adalah prototipe katalog untuk UMKM kreatif Indonesia. Pengunjung dapat men
 
 | Area | Akses |
 | --- | --- |
-| Storefront | [https://e-ecom.vercel.app](https://e-ecom.vercel.app) |
-| Dashboard admin demo | [/admin/demo](https://e-ecom.vercel.app/admin/demo) · tanpa login |
-| Workspace dengan akun | [/login](https://e-ecom.vercel.app/login) · memerlukan backend yang sudah dikonfigurasi |
+| Storefront | [https://ee-ecom.vercel.app](https://ee-ecom.vercel.app) |
+| Dashboard admin demo | [/admin/demo](https://ee-ecom.vercel.app/admin/demo) · tanpa login |
+| Workspace dengan akun | [/login](https://ee-ecom.vercel.app/login) · memerlukan backend yang sudah dikonfigurasi |
 
 ## Showcase CHAT 2026 · Banda Aceh
 
