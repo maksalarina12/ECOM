@@ -1,0 +1,77 @@
+{
+  "products": [
+    {
+      "id": "rest",
+      "price": 2450000,
+      "stock": 42
+    },
+    {
+      "id": "frame",
+      "price": 3790000,
+      "stock": 7
+    },
+    {
+      "id": "side",
+      "price": 840000,
+      "stock": 16
+    },
+    {
+      "id": "glow",
+      "price": 590000,
+      "stock": 24
+    },
+    {
+      "id": "sofa",
+      "price": 6800000,
+      "stock": 4
+    },
+    {
+      "id": "chair",
+      "price": 1290000,
+      "stock": 13
+    },
+    {
+      "id": "coffee",
+      "price": 1690000,
+      "stock": 11
+    },
+    {
+      "id": "wardrobe",
+      "price": 4900000,
+      "stock": 5
+    },
+    {
+      "id": "rattan",
+      "price": 790000,
+      "stock": 9
+    },
+    {
+      "id": "vase",
+      "price": 320000,
+      "stock": 25
+    },
+    {
+      "id": "craft",
+      "price": 210000,
+      "stock": 18
+    }
+  ],
+  "variants": [
+    {
+      "id": "single",
+      "price": 1750000
+    },
+    {
+      "id": "double",
+      "price": 2190000
+    },
+    {
+      "id": "queen",
+      "price": 2450000
+    },
+    {
+      "id": "king",
+      "price": 2890000
+    }
+  ]
+}

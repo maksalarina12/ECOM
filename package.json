@@ -10,7 +10,8 @@
     "preview": "vite preview --host 0.0.0.0",
     "test": "vitest run",
     "check": "npm run typecheck && npm test && npm run build",
-    "assets:fetch": "node scripts/fetch-model.mjs"
+    "assets:fetch": "node scripts/fetch-model.mjs",
+    "db:seed": "node scripts/seed-db.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.0.0",

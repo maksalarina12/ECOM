@@ -39,10 +39,13 @@ import {
   AlertTriangle,
   Eye,
   EyeOff,
+  UserRound,
+  LogOut,
 } from 'lucide-react';
-import { formatIDR, productPrice, variants, type Product, type ProductModel } from './data/catalog';
+import { formatIDR, productPrice, seedProducts, variants, type Product, type ProductModel } from './data/catalog';
 import { useShop, total, type Order } from './store/shop';
 import type { Mode } from './scenes/Scene';
+import { AuthProvider, RoleGuard, useAuth, type AuthUser, type Role } from './auth';
 
 const Scene = lazy(() => import('./scenes/Scene'));
 
@@ -342,6 +345,7 @@ function Header() {
   const [search, setSearch] = useState(false);
   const [q, setQ] = useState('');
   const nav = useNavigate();
+  const { user } = useAuth();
   const count = cart.reduce((n, x) => n + x.qty, 0);
 
   return (
@@ -367,8 +371,8 @@ function Header() {
         <NavLink onClick={() => setMenu(false)} to="/about">
           About
         </NavLink>
-        <NavLink onClick={() => setMenu(false)} to="/admin">
-          For merchants
+        <NavLink onClick={() => setMenu(false)} to="/admin/demo">
+          Demo dashboard
         </NavLink>
       </nav>
       <div className="header-actions">
@@ -378,6 +382,9 @@ function Header() {
         <Link to="/cart" className="bag" aria-label={`Keranjang ${count} produk`}>
           <ShoppingBag size={19} />
           <sup>{count}</sup>
+        </Link>
+        <Link to={user ? '/account' : '/login'} className="icon-button" aria-label={user ? 'Akun' : 'Masuk'}>
+          <UserRound size={19} />
         </Link>
         <button className="icon-button mobile-menu" aria-label="Menu" onClick={() => setMenu((v) => !v)}>
           {menu ? <X size={21} /> : <Menu size={21} />}
@@ -429,7 +436,7 @@ function Footer() {
         <span>EXPLORE</span>
         <Link to="/collection">All collections</Link>
         <Link to="/studio/rest">3D product studio</Link>
-        <Link to="/admin">Merchant dashboard</Link>
+        <Link to="/admin/demo">Demo dashboard</Link>
       </div>
       <div className="footer-news">
         <span>STAY IN THE LOOP</span>
@@ -1393,7 +1400,9 @@ const paymentMethods = [
 function Checkout() {
   const cart = useShop((s) => s.cart);
   const products = useShop((s) => s.products);
-  const checkout = useShop((s) => s.checkout);
+  const setProducts = useShop((s) => s.setProducts);
+  const clearCart = useShop((s) => s.clearCart);
+  const { user } = useAuth();
   const [done, setDone] = useState('');
   const [error, setError] = useState('');
   const [method, setMethod] = useState('transfer');
@@ -1410,7 +1419,7 @@ function Checkout() {
           <div className="success-mark">
             <Check size={30} />
           </div>
-          <span className="eyebrow">ORDER RECORDED LOCALLY</span>
+          <span className="eyebrow">ORDER CONFIRMED</span>
           <h2>Pesanan berhasil dibuat.</h2>
           <p>
             Nomor pesanan <strong>{done}</strong> · metode{' '}
@@ -1421,21 +1430,38 @@ function Checkout() {
             <Link to="/collection" className="btn dark">
               Continue shopping <ArrowRight size={17} />
             </Link>
-            <Link to="/admin" className="text-link">
-              See it in the merchant dashboard
+            <Link to="/account" className="text-link">
+              See my orders
             </Link>
           </div>
         </div>
       ) : cart.length ? (
         <div className="checkout-layout">
           <form
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
               const fd = new FormData(e.currentTarget);
+              setError('');
               try {
-                setDone(checkout(String(fd.get('name')), String(fd.get('email')), String(fd.get('address'))));
+                const response = await fetch('/api/orders', {
+                  method: 'POST',
+                  credentials: 'same-origin',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    items: cart,
+                    customer: fd.get('name'),
+                    email: user?.email,
+                    address: fd.get('address'),
+                    payment: method,
+                  }),
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Pesanan gagal dibuat');
+                setDone(data.order.id);
+                if (data.products) setProducts(data.products);
+                clearCart();
               } catch (err) {
-                setError(String(err));
+                setError(err instanceof Error ? err.message : String(err));
               }
             }}
           >
@@ -1492,7 +1518,7 @@ function Checkout() {
               Place order <ArrowRight size={17} />
             </button>
             <small className="checkout-note">
-              No payment collected. Order data is saved in this browser.
+              No payment collected. Your order is saved to your account.
             </small>
           </form>
           <aside className="order-summary">
@@ -1528,7 +1554,7 @@ function Checkout() {
               <strong>{formatIDR(totalDue)}</strong>
             </div>
             <small>
-              <ShieldCheck size={14} /> Simulasi — tidak ada data yang dikirim ke server.
+              <ShieldCheck size={14} /> Pesanan disimpan aman di akun Anda.
             </small>
           </aside>
         </div>
@@ -1540,6 +1566,132 @@ function Checkout() {
       )}
     </main>
   );
+}
+
+function Login() {
+  const { user, login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  useEffect(() => {
+    if (user) navigate(user.role === 'customer' ? '/account' : '/admin', { replace: true });
+  }, [user, navigate]);
+  return (
+    <main className="auth-page">
+      <section className="auth-panel">
+        <span className="eyebrow">ECOM ACCOUNT</span>
+        <h1>Welcome <em>back.</em></h1>
+        <p>Masuk untuk mengakses akun dan workspace sesuai role Anda.</p>
+        <form onSubmit={async (event) => {
+          event.preventDefault();
+          setSubmitting(true);
+          setError('');
+          const form = new FormData(event.currentTarget);
+          try {
+            const next = await login(String(form.get('email')), String(form.get('password')));
+            const from = (location.state as { from?: string } | null)?.from;
+            navigate(from || (next.role === 'customer' ? '/account' : '/admin'), { replace: true });
+          } catch (reason) {
+            setError(reason instanceof Error ? reason.message : 'Tidak dapat masuk');
+          } finally {
+            setSubmitting(false);
+          }
+        }}>
+          <label>Email<input name="email" type="email" autoComplete="username" required /></label>
+          <label>Password<input name="password" type="password" autoComplete="current-password" minLength={8} required /></label>
+          {error && <p className="auth-error" role="alert">{error}</p>}
+          <button className="btn dark wide" disabled={submitting}>{submitting ? 'Signing in…' : 'Sign in'} <ArrowRight size={16} /></button>
+        </form>
+      </section>
+      <aside className="auth-visual"><div><span>ROLE-BASED ACCESS</span><h2>One account.<br/>The right workspace.</h2><p>Customer, merchant, dan administrator memiliki hak akses terpisah yang divalidasi server.</p></div></aside>
+    </main>
+  );
+}
+
+function Account() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const [orders, setOrders] = useState<Array<{ id: string; date: string; total: number; status: string }>>([]);
+  useEffect(() => {
+    if (!user) return;
+    fetch('/api/orders', { credentials: 'same-origin' })
+      .then((response) => response.ok ? response.json() : { orders: [] })
+      .then((data) => setOrders(data.orders || []))
+      .catch(() => undefined);
+  }, [user]);
+  if (!user) return null;
+  return (
+    <main className="page account-page">
+      <span className="eyebrow">MY ECOM</span>
+      <h1>Hello, <em>{user.name}.</em></h1>
+      <div className="account-grid">
+        <section><span>ACCOUNT</span><h2>{user.email}</h2><p>Role: {user.role}</p></section>
+        <section><span>ACCESS</span><h2>{user.role === 'customer' ? 'Customer account' : 'Merchant workspace'}</h2>{user.role !== 'customer' && <Link className="text-link" to="/admin">Open workspace <ArrowRight size={15}/></Link>}</section>
+      </div>
+      <div className="account-orders">
+        <span className="eyebrow">MY ORDERS · {orders.length}</span>
+        {orders.length ? orders.map((order) => (
+          <div key={order.id} className="account-order">
+            <strong>{order.id}</strong>
+            <small>{new Date(order.date).toLocaleDateString('id-ID')}</small>
+            <span>{formatIDR(order.total)}</span>
+            <span className="status-pill">{order.status}</span>
+          </div>
+        )) : <p>Belum ada pesanan.</p>}
+      </div>
+      <button className="text-link" onClick={async () => { await logout(); navigate('/'); }}>Sign out <LogOut size={15}/></button>
+    </main>
+  );
+}
+
+const demoUsers: AuthUser[] = [
+  { id: 'demo-customer', name: 'Rina Demo', email: 'rina@example.com', role: 'customer' },
+  { id: 'demo-merchant', name: 'Ari Demo', email: 'ari@example.com', role: 'merchant' },
+  { id: 'demo-admin', name: 'Admin Demo', email: 'admin@example.com', role: 'admin' },
+];
+
+const demoOrders: Order[] = [
+  {
+    id: 'DEMO-001', date: '2026-11-25T03:00:00.000Z', customer: 'Rina Demo',
+    email: 'rina@example.com', address: 'Alamat contoh, Banda Aceh',
+    items: [{ id: seedProducts[0].id, variant: '', qty: 1 }],
+    total: seedProducts[0].price, status: 'Pending',
+  },
+];
+
+function UserManagement({ demo }: { demo: boolean }) {
+  const [users, setUsers] = useState<AuthUser[]>(demo ? demoUsers : []);
+  const [error, setError] = useState('');
+  const load = async () => {
+    const response = await fetch('/api/admin/users', { credentials: 'same-origin' });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || 'Tidak dapat memuat user');
+    setUsers(data.users);
+  };
+  useEffect(() => {
+    if (!demo) void load().catch((reason) => setError(String(reason)));
+  }, [demo]);
+  const updateRole = async (id: string, role: Role) => {
+    if (demo) {
+      setUsers((current) => current.map((item) => item.id === id ? { ...item, role } : item));
+      return;
+    }
+    const response = await fetch('/api/admin/users', {
+      method: 'PATCH',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, role }),
+    });
+    const data = await response.json();
+    if (!response.ok) return setError(data.error || 'Tidak dapat mengubah role');
+    setUsers(data.users);
+  };
+  return <div className="data-table">
+    <div className="data-row users-row table-titles"><span>USER</span><span>ROLE</span><span>STATUS</span></div>
+    {users.map((item) => <div className="data-row users-row" key={item.id}><span><strong>{item.name}</strong><small>{item.email}</small></span><select value={item.role} onChange={(event) => void updateRole(item.id, event.target.value as Role)}>{['customer','merchant','admin'].map((role) => <option key={role}>{role}</option>)}</select><span className="status-pill completed">Active</span></div>)}
+    {error && <p className="admin-empty" role="alert">{error}</p>}
+  </div>;
 }
 
 /* ------------------------------------------------------------------ */
@@ -1599,23 +1751,110 @@ function About() {
 /*  Merchant dashboard                                                 */
 /* ------------------------------------------------------------------ */
 
-function Admin() {
-  const products = useShop((s) => s.products);
-  const orders = useShop((s) => s.orders);
+function Admin({ demo = false }: { demo?: boolean }) {
+  const { user, logout } = useAuth();
+  const storedProducts = useShop((s) => s.products);
+  const storedOrders = useShop((s) => s.orders);
+  const [sampleProducts, setSampleProducts] = useState(seedProducts);
+  const [sampleOrders, setSampleOrders] = useState(demoOrders);
+  const [demoReset, setDemoReset] = useState(0);
+  const products = demo ? sampleProducts : storedProducts;
+  const orders = demo ? sampleOrders : storedOrders;
+  const showUsers = demo || user?.role === 'admin';
   const save = useShop((s) => s.save);
   const del = useShop((s) => s.del);
-  const status = useShop((s) => s.status);
+  const setProducts = useShop((s) => s.setProducts);
   const reset = useShop((s) => s.reset);
-  const [tab, setTab] = useState<'overview' | 'products' | 'orders'>('overview');
+  const [tab, setTab] = useState<'overview' | 'products' | 'orders' | 'users'>('overview');
   const [editing, setEditing] = useState<Product | null>(null);
   const [newMode, setNewMode] = useState(false);
   const [filter, setFilter] = useState('');
+  const [productError, setProductError] = useState('');
+  const setOrders = useShop((s) => s.setOrders);
+  const updateStatus = async (id: string, next: Order['status']) => {
+    if (demo) {
+      setSampleOrders((current) => current.map((order) => order.id === id ? { ...order, status: next } : order));
+      return;
+    }
+    const response = await fetch('/api/orders', {
+      method: 'PATCH',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, status: next }),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      setOrders(orders.map((order) => order.id === id ? data.order : order));
+      if (data.products) setProducts(data.products);
+    }
+  };
+  useEffect(() => {
+    if (demo) return;
+    fetch('/api/products')
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error('Tidak dapat memuat katalog')))
+      .then((data) => setProducts(data.products || []))
+      .catch((reason) => setProductError(reason instanceof Error ? reason.message : 'Tidak dapat memuat katalog'));
+  }, [demo, setProducts]);
+  useEffect(() => {
+    if (demo) return;
+    fetch('/api/orders', { credentials: 'same-origin' })
+      .then((response) => response.ok ? response.json() : { orders: [] })
+      .then((data) => setOrders(data.orders || []))
+      .catch(() => undefined);
+  }, [demo, setOrders]);
   const revenue = orders.filter((x) => x.status !== 'Cancelled').reduce((n, x) => n + x.total, 0);
   const lowStock = products.filter((p) => p.stock <= 5);
   const pending = orders.filter((o) => o.status === 'Pending').length;
   const visibleProducts = products.filter((p) =>
     `${p.name} ${p.subtitle} ${p.category}`.toLowerCase().includes(filter.toLowerCase()),
   );
+  const persistProduct = async (product: Product) => {
+    setProductError('');
+    try {
+      const existing = products.some((item) => item.id === product.id);
+      if (demo) {
+        setSampleProducts(existing ? products.map((item) => item.id === product.id ? product : item) : [product, ...products]);
+        setEditing(null);
+        setNewMode(false);
+        return;
+      }
+      const response = await fetch('/api/products', {
+        method: existing ? 'PATCH' : 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(product),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Tidak dapat menyimpan produk');
+      setProducts(data.products);
+      save(product);
+      setEditing(null);
+      setNewMode(false);
+    } catch (reason) {
+      setProductError(reason instanceof Error ? reason.message : 'Tidak dapat menyimpan produk');
+    }
+  };
+  const deleteProduct = async (id: string) => {
+    setProductError('');
+    if (demo) {
+      setSampleProducts((current) => current.filter((item) => item.id !== id));
+      return;
+    }
+    try {
+      const response = await fetch('/api/products', {
+        method: 'DELETE',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Tidak dapat menghapus produk');
+      setProducts(data.products);
+      del(id);
+    } catch (reason) {
+      setProductError(reason instanceof Error ? reason.message : 'Tidak dapat menghapus produk');
+    }
+  };
 
   const pipeline = (['Pending', 'Confirmed', 'Processing', 'Completed'] as const).map((s) => ({
     s,
@@ -1629,7 +1868,7 @@ function Admin() {
           <img className="admin-logo" src="/logos/ECOM-White.png" alt="ECOM" />
         </Link>
         <small>MERCHANT WORKSPACE</small>
-        {(['overview', 'products', 'orders'] as const).map((t) => (
+        {(['overview', 'products', 'orders', ...(showUsers ? ['users' as const] : [])] as const).map((t) => (
           <button
             key={t}
             className={tab === t ? 'active' : ''}
@@ -1639,17 +1878,13 @@ function Admin() {
               setNewMode(false);
             }}
           >
-            {t === 'overview' ? 'Overview' : t === 'products' ? 'Products' : 'Orders'}
+            {t === 'overview' ? 'Overview' : t === 'products' ? 'Products' : t === 'orders' ? 'Orders' : 'Users'}
             {t === 'orders' && orders.length > 0 && <sup>{orders.length}</sup>}
           </button>
         ))}
         <div className="admin-nav-bottom">
           <Link to="/collection">← Back to storefront</Link>
-          <small>
-            LOCAL BROWSER STORAGE
-            <br />
-            NOT SECURE FOR PRODUCTION
-          </small>
+          {!demo && <button onClick={() => void logout()}><LogOut size={14}/> Sign out</button>}
         </div>
       </aside>
 
@@ -1662,10 +1897,10 @@ function Admin() {
                 ? 'Overview'
                 : tab === 'products'
                   ? 'Product management'
-                  : 'Order management'}
+                  : tab === 'orders' ? 'Order management' : 'User management'}
             </h1>
           </div>
-          <span className="demo-tag">LOCAL WORKSPACE</span>
+          <span className="demo-tag">{demo ? 'DEMO' : user?.role.toUpperCase()} WORKSPACE</span>
         </div>
 
         {tab === 'overview' && (
@@ -1708,7 +1943,7 @@ function Admin() {
                     </div>
                   ))}
                 </div>
-                <p>Status pesanan disimpan di browser ini.</p>
+                <p>Status pesanan tersinkron dengan database.</p>
               </div>
 
               <div className="admin-panel">
@@ -1772,7 +2007,14 @@ function Admin() {
               <button
                 className="text-link"
                 onClick={() => {
-                  if (confirm('Hapus seluruh data lokal dan pulihkan katalog?')) reset();
+                  if (!confirm('Pulihkan data contoh?')) return;
+                  if (demo) {
+                    setSampleProducts(seedProducts);
+                    setSampleOrders(demoOrders);
+                    setDemoReset((current) => current + 1);
+                  } else {
+                    reset();
+                  }
                 }}
               >
                 Reset all local data <RotateCcw size={16} />
@@ -1813,13 +2055,10 @@ function Admin() {
                   setEditing(null);
                   setNewMode(false);
                 }}
-                onSave={(p) => {
-                  save(p);
-                  setEditing(null);
-                  setNewMode(false);
-                }}
+                onSave={(p) => void persistProduct(p)}
               />
             )}
+            {productError && <p className="admin-empty" role="alert">{productError}</p>}
             <div className="data-table">
               <div className="data-row table-titles table-products">
                 <span>PRODUCT</span>
@@ -1848,7 +2087,7 @@ function Admin() {
                     </button>
                     <button
                       onClick={() => {
-                        if (confirm(`Hapus produk ${p.name}?`)) del(p.id);
+                        if (confirm(`Hapus produk ${p.name}?`)) void deleteProduct(p.id);
                       }}
                     >
                       Delete
@@ -1887,7 +2126,7 @@ function Admin() {
                 <select
                   aria-label={'Order status ' + o.id}
                   value={o.status}
-                  onChange={(e) => status(o.id, e.target.value as Order['status'])}
+                  onChange={(e) => void updateStatus(o.id, e.target.value as Order['status'])}
                 >
                   {['Pending', 'Confirmed', 'Processing', 'Completed', 'Cancelled'].map((s) => (
                     <option key={s}>{s}</option>
@@ -1902,6 +2141,7 @@ function Admin() {
             )}
           </div>
         )}
+        {showUsers && <div hidden={tab !== 'users'}>{(demo || tab === 'users') && <UserManagement key={demoReset} demo={demo} />}</div>}
       </section>
     </main>
   );
@@ -1995,7 +2235,14 @@ function ProductForm({
 
 function AppShell() {
   const location = useLocation();
+  const setProducts = useShop((s) => s.setProducts);
   const admin = location.pathname.startsWith('/admin');
+  useEffect(() => {
+    fetch('/api/products')
+      .then((response) => response.ok ? response.json() : null)
+      .then((data) => { if (data?.products) setProducts(data.products); })
+      .catch(() => undefined);
+  }, [setProducts]);
   return (
     <>
       <ScrollToTop />
@@ -2008,9 +2255,12 @@ function AppShell() {
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/studio/:id" element={<Studio />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/checkout" element={<RoleGuard roles={['customer','merchant','admin']}><Checkout /></RoleGuard>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/account" element={<RoleGuard roles={['customer','merchant','admin']}><Account /></RoleGuard>} />
           <Route path="/about" element={<About />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/demo" element={<Admin demo />} />
+          <Route path="/admin" element={<RoleGuard roles={['merchant','admin']}><Admin /></RoleGuard>} />
           <Route
             path="*"
             element={
@@ -2030,7 +2280,7 @@ function AppShell() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AppShell />
+      <AuthProvider><AppShell /></AuthProvider>
     </BrowserRouter>
   );
 }
