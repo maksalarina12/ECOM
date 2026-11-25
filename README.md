@@ -1,3 +1,12 @@
+<div align="center">
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="public/logos/ECOM-White.png">
+  <img src="public/logos/ECOM-Black.png" alt="Logo ECOM" width="160">
+</picture>
+
+</div>
+
 # ECOM · Katalog UMKM dan Studio 3D
 
 ECOM adalah prototipe katalog untuk UMKM kreatif Indonesia. Pengunjung dapat menjelajahi koleksi furnitur, memeriksa material dan dimensi produk di studio 3D, lalu mencoba alur belanja.
