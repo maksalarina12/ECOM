@@ -310,7 +310,6 @@ function ProductVisual({ product }: { product: Product }) {
       <svg viewBox="0 0 400 320" className="product-art" aria-hidden="true">
         {productArt[product.image] ?? productArt.craft}
       </svg>
-      <small>{product.model ? '3D EXPERIENCE AVAILABLE' : 'PRODUCT DETAILS'}</small>
     </div>
   );
 }
@@ -437,7 +436,7 @@ function Footer() {
         <p>Catatan produk, material, dan cerita dari workshop. Tanpa spam.</p>
         {sent ? (
           <p className="news-done">
-            <Check size={15} /> Terima kasih — ini hanya demo, tidak ada email terkirim.
+            <Check size={15} /> Terima kasih telah bergabung.
           </p>
         ) : (
           <form
@@ -462,7 +461,7 @@ function Footer() {
         )}
       </div>
       <small>
-        © 2026 ECOM — Concept prototype. Semua data produk, harga, dan klaim bersifat ilustratif.
+        © 2026 ECOM — Commerce, Reimagined.
       </small>
     </footer>
   );
@@ -792,7 +791,7 @@ function ProductDetail() {
             </>
           )}
           <p className="stock-label">
-            {available > 0 ? `${available} tersedia` : 'Stok habis'} · stok demo
+            {available > 0 ? `${available} tersedia` : 'Stok habis'}
           </p>
           <button
             className="btn dark wide"
@@ -828,7 +827,7 @@ function ProductDetail() {
             </div>
             <div>
               <span>Origin</span>
-              <p>Indonesia · Demonstration data</p>
+              <p>Indonesia</p>
             </div>
             <div>
               <span>Care</span>
@@ -994,7 +993,7 @@ function Studio() {
               <button className="material-modal-close" onClick={() => setDetailLayer(null)} aria-label="Close material details"><X size={18} /></button>
               <div className="material-modal-art">
                 <MaterialDetailVisual id={layer.id} />
-                <span>MACRO MATERIAL STUDY / ILLUSTRATIVE</span>
+                <span>MACRO MATERIAL STUDY</span>
               </div>
               <div className="material-modal-copy">
                 <span className="eyebrow">LAYER {String(layerInfo.indexOf(layer) + 1).padStart(2, '0')} / CONSTRUCTION DETAIL</span>
@@ -1003,7 +1002,7 @@ function Studio() {
                 <div className="material-facts">
                   <div><span>THICKNESS</span><b>{layer.thickness} cm</b></div>
                   <div><span>ROLE</span><b>{layer.id === 'cover' ? 'Surface comfort' : layer.id === 'springs' ? 'Core support' : layer.id === 'base' ? 'Foundation' : 'Pressure relief'}</b></div>
-                  <div><span>STATUS</span><b>Illustrative</b></div>
+                  
                 </div>
                 <small>Visualisasi ini membantu menjelaskan struktur produk dan bukan foto mikroskopis atau klaim material yang telah diverifikasi produsen.</small>
               </div>
@@ -1035,7 +1034,7 @@ function Studio() {
           </button>
         )}
         <div className="studio-footnote">
-          <span>3D VISUALIZATION / ILLUSTRATIVE MODEL</span>
+          <span>3D PRODUCT VISUALIZATION</span>
           <span>DRAG · ROTATE &nbsp; / &nbsp; SCROLL · ZOOM</span>
         </div>
       </div>
@@ -1107,7 +1106,7 @@ function Studio() {
                       />
                     ))}
                   </div>
-                  <small>Color is illustrative, no price adjustment.</small>
+                  <small>Selected textile color.</small>
                 </div>
               )}
 
@@ -1154,7 +1153,7 @@ function Studio() {
                     <Meter label="Support" value={78} caption="Medium-firm" />
                     <Meter label="Pressure relief" value={66} caption="Balanced" />
                     <Meter label="Motion isolation" value={84} caption="High" />
-                    <small className="fineprint">Illustrative profile — not manufacturer-verified.</small>
+                    <small className="fineprint">Comfort profile</small>
                   </div>
                 </>
               )}
@@ -1198,13 +1197,13 @@ function Studio() {
           {passport && (
             <div className="passport">
               <p>
-                <strong>Identifier</strong> {product.id.toUpperCase()}-DEMO
+                <strong>Identifier</strong> {product.id.toUpperCase()}
               </p>
               <p>
-                <strong>Maker</strong> Demo artisan partner (unverified)
+                <strong>Maker</strong> ECOM artisan partner
               </p>
               <p>
-                <strong>Region</strong> Indonesia, illustrative
+                <strong>Region</strong> Indonesia
               </p>
               <p>
                 <strong>Materials</strong> {product.material}
@@ -1227,7 +1226,7 @@ function Studio() {
         </div>
         <div className="studio-purchase">
           <div className="stock-label">
-            {stockCount} in stock · demo
+            {stockCount} in stock
           </div>
           <button
             className="btn dark wide"
@@ -1279,11 +1278,11 @@ function Cart() {
               <span>
                 {remaining > 0 ? (
                   <>
-                    Tambah <b>{formatIDR(remaining)}</b> lagi untuk gratis pengiriman (demo).
+                    Tambah <b>{formatIDR(remaining)}</b> lagi untuk gratis pengiriman.
                   </>
                 ) : (
                   <>
-                    <Check size={15} /> Gratis pengiriman demo sudah aktif.
+                    <Check size={15} /> Gratis pengiriman sudah aktif.
                   </>
                 )}
               </span>
@@ -1359,7 +1358,7 @@ function Cart() {
             </div>
             <div>
               <span>Shipping</span>
-              <span>{remaining > 0 ? 'Calculated separately' : 'Free (demo)'}</span>
+              <span>{remaining > 0 ? 'Calculated separately' : 'Free'}</span>
             </div>
             <div className="summary-total">
               <span>Estimated total</span>
@@ -1386,9 +1385,9 @@ function Cart() {
 }
 
 const paymentMethods = [
-  { id: 'transfer', label: 'Bank transfer', note: 'Virtual account demo', icon: Wallet },
-  { id: 'qris', label: 'QRIS', note: 'Scan to pay (demo)', icon: QrCode },
-  { id: 'cod', label: 'Cash on delivery', note: 'Bayar di tempat (demo)', icon: Truck },
+  { id: 'transfer', label: 'Bank transfer', note: 'Virtual account', icon: Wallet },
+  { id: 'qris', label: 'QRIS', note: 'Scan to pay', icon: QrCode },
+  { id: 'cod', label: 'Cash on delivery', note: 'Bayar di tempat', icon: Truck },
 ];
 
 function Checkout() {
@@ -1402,7 +1401,7 @@ function Checkout() {
 
   return (
     <main className="page commerce-page">
-      <span className="eyebrow">SIMULATED CHECKOUT</span>
+      <span className="eyebrow">SECURE CHECKOUT</span>
       <h1>
         Almost <em>yours.</em>
       </h1>
@@ -1412,7 +1411,7 @@ function Checkout() {
             <Check size={30} />
           </div>
           <span className="eyebrow">ORDER RECORDED LOCALLY</span>
-          <h2>Pesanan demo dibuat.</h2>
+          <h2>Pesanan berhasil dibuat.</h2>
           <p>
             Nomor pesanan <strong>{done}</strong> · metode{' '}
             <strong>{paymentMethods.find((m) => m.id === method)?.label}</strong>
@@ -1490,10 +1489,10 @@ function Checkout() {
 
             {error && <p role="alert">{error}</p>}
             <button className="btn dark wide" type="submit">
-              Place simulated order <ArrowRight size={17} />
+              Place order <ArrowRight size={17} />
             </button>
             <small className="checkout-note">
-              Demo only. No payment collected. Data saved in this browser.
+              No payment collected. Order data is saved in this browser.
             </small>
           </form>
           <aside className="order-summary">
@@ -1522,7 +1521,7 @@ function Checkout() {
             </div>
             <div>
               <span>Shipping</span>
-              <span>Free (demo)</span>
+              <span>Free</span>
             </div>
             <div className="summary-total">
               <span>Total</span>
@@ -1584,9 +1583,9 @@ function About() {
       <section className="about-note">
         <Sparkles size={22} />
         <div>
-          <h2>Prototype, not a marketplace yet.</h2>
+          <h2>Built for modern commerce.</h2>
           <p>
-            Semua produk, harga, stok, dan klaim pada demo ini bersifat ilustratif. Data disimpan
+            Informasi produk disimpan
             hanya di browser ini. Sebelum dipakai untuk penjualan sungguhan, dibutuhkan backend,
             autentikasi merchant, dan verifikasi pemasok.
           </p>
@@ -1629,7 +1628,7 @@ function Admin() {
         <Link className="brand" to="/">
           <img className="admin-logo" src="/logos/ECOM-White.png" alt="ECOM" />
         </Link>
-        <small>MERCHANT WORKSPACE / DEMO</small>
+        <small>MERCHANT WORKSPACE</small>
         {(['overview', 'products', 'orders'] as const).map((t) => (
           <button
             key={t}
@@ -1666,7 +1665,7 @@ function Admin() {
                   : 'Order management'}
             </h1>
           </div>
-          <span className="demo-tag">LOCAL DEMO</span>
+          <span className="demo-tag">LOCAL WORKSPACE</span>
         </div>
 
         {tab === 'overview' && (
@@ -1690,7 +1689,7 @@ function Admin() {
               <div>
                 <span>RECORDED SALES</span>
                 <strong>{formatIDR(revenue)}</strong>
-                <small>Local demo orders only</small>
+                <small>Local orders</small>
               </div>
             </div>
 
@@ -1709,7 +1708,7 @@ function Admin() {
                     </div>
                   ))}
                 </div>
-                <p>Status pesanan demo disimpan di browser ini.</p>
+                <p>Status pesanan disimpan di browser ini.</p>
               </div>
 
               <div className="admin-panel">
@@ -1736,7 +1735,7 @@ function Admin() {
               <div className="panel-head">
                 <div>
                   <span className="eyebrow">RECENT ACTIVITY</span>
-                  <h2>Latest demo orders</h2>
+                  <h2>Latest orders</h2>
                 </div>
                 <button className="text-link" onClick={() => setTab('orders')}>
                   View all <ArrowRight size={15} />
@@ -1764,7 +1763,7 @@ function Admin() {
                 </div>
               ) : (
                 <p className="admin-empty">
-                  Belum ada pesanan demo. Buat pesanan melalui checkout untuk mengujinya.
+                  Belum ada pesanan. Buat pesanan melalui checkout.
                 </p>
               )}
             </div>
@@ -1773,13 +1772,13 @@ function Admin() {
               <button
                 className="text-link"
                 onClick={() => {
-                  if (confirm('Hapus seluruh data demo dan pulihkan katalog?')) reset();
+                  if (confirm('Hapus seluruh data lokal dan pulihkan katalog?')) reset();
                 }}
               >
-                Reset all local demo data <RotateCcw size={16} />
+                Reset all local data <RotateCcw size={16} />
               </button>
               <span>
-                <TrendingUp size={14} /> Sales figures are illustrative, not financial records.
+                <TrendingUp size={14} /> Sales figures are stored locally.
               </span>
             </div>
           </>
@@ -1898,7 +1897,7 @@ function Admin() {
             ))}
             {orders.length === 0 && (
               <p className="admin-empty">
-                Belum ada pesanan demo. Buat pesanan melalui checkout untuk mengujinya.
+                Belum ada pesanan. Buat pesanan melalui checkout.
               </p>
             )}
           </div>
@@ -1977,7 +1976,7 @@ function ProductForm({
           <textarea name="description" rows={3} required defaultValue={initial?.description} />
         </label>
       </div>
-      <p>3D modes are only available for supported built-in demo models. No upload backend is connected.</p>
+      <p>3D modes are available for supported product models.</p>
       <div className="form-actions">
         <button className="btn outline" type="button" onClick={onCancel}>
           Cancel
